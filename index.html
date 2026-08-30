@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Orçamento - Atelier Costura AE</title>
+    <!-- Tailwind CSS para estilização rápida e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css\">\n    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #050505;
+        }
+        .gold-text {
+            color: #c5a880;
+        }
+        .gold-border {
+            border-color: rgba(197, 168, 128, 0.3);
+        }
+        .gold-border-focus:focus {
+            border-color: #c5a880;
+            box-shadow: 0 0 0 1px #c5a880;
+        }
+        .gold-btn {
+            background: linear-gradient(135deg, #c5a880 0%, #8c6239 100%);
+            color: #000000;
+        }
+        .gold-btn:hover {
+            background: linear-gradient(135deg, #dfc097 0%, #a47545 100%);
+        }
+        .gold-gradient-bg {
+            background: linear-gradient(135deg, rgba(197, 168, 128, 0.1) 0%, rgba(140, 98, 57, 0.05) 100%);
+        }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen py-6 px-4 md:px-8">
+
+    <div class="max-w-xl mx-auto bg-[#121212] rounded-2xl shadow-2xl overflow-hidden border gold-border">
+
+        <!-- CABEÇALHO (Inspirado fielmente na identidade do Cartão de Visita) -->
+        <div class="bg-black text-white p-6 text-center relative border-b gold-border">
+            <!-- Logo Vetorial AE estilizada e fiel ao Cartão de Visita -->
+            <div class="flex justify-center mb-3">
+                <svg width="70" height="70" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Espinha Dorsal Vertical (Leg direita do A / Costas do E) -->
+                    <rect x="200" y="70" width="25" height="260" fill="white"/>
+
+                    <!-- A estilizado com furo transparente (using evenodd) -->
+                    <path d="M 200,70 L 90,330 L 200,330 Z M 200,120 L 125,330 L 200,330 Z" fill="white" fill-rule="evenodd"/>
+
+                    <!-- Barra de cruzamento do A perfeitamente alinhada e sem rebarbas -->
+                    <polygon points="182.1,170 200,170 200,195 173.2,195" fill="white"/>
+
+                    <!-- Barras horizontais do E -->
+                    <rect x="225" y="70" width="80" height="25" fill="white"/>
+                    <rect x="225" y="170" width="60" height="25" fill="white"/>
+                    <rect x="225" y="305" width="80" height="25" fill="white"/>
+                </svg>
+            </div>
+
+            <h1 class="text-3xl font-extrabold tracking-widest text-white leading-none">ATELIER</h1>
+            <p class="text-xs font-semibold tracking-[0.25em] text-[#c5a880] uppercase mt-1">Costura AE • Uniformes Esportivos</p>
+
+            <!-- Slogan marcante do cartão -->
+            <div class="mt-4 inline-block bg-black border border-[#c5a880] px-4 py-1.5 rounded-sm">
+                <p class="text-xs font-bold tracking-widest italic gold-text">SEU TIME. SUA IDENTIDADE.</p>
+            </div>
+
+            <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-4 text-xs text-gray-400">
+                <span><i class="fab fa-whatsapp gold-text mr-1.5"></i> (11) 97777-5100</span>
+                <span><i class="fab fa-instagram gold-text mr-1.5"></i> @atelier.costura.ae</span>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-[#c5a880]/20 flex justify-between text-[10px] text-gray-500">
+                <span id="orcamento-numero">Orçamento: #AE-20260830-XXXX</span>
+                <span id="orcamento-data">Data: --/--/----</span>
+            </div>
+        </div>
+
+        <form id="form-orcamento" class="p-6 space-y-6">
+
+            <!-- SEÇÃO 1: DADOS DO CLIENTE -->
+            <div class="space-y-4">
+                <h2 class="text-sm font-bold tracking-wider gold-text uppercase border-b pb-1.5 border-[#c5a880]/20 flex items-center gap-2">
+                    <i class="fas fa-user-edit text-xs"></i> Dados do Cliente
+                </h2>
+
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Nome Completo *</label>
+                    <input type="text" id="nome" required class="w-full bg-black/40 border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus placeholder:text-gray-700">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Nome da Equipe *</label>
+                        <input type="text" id="equipe" required class="w-full bg-black/40 border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus placeholder:text-gray-700">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">WhatsApp de Contato *</label>
+                        <input type="tel" id="client_phone" required placeholder="(11) 99999-9999" class="w-full bg-black/40 border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus placeholder:text-gray-700">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Observações do Pedido</label>
+                    <textarea id="obs" rows="2" placeholder="Ex: Detalhes das cores, tamanhos específicos, etc..." class="w-full bg-black/40 border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus placeholder:text-gray-700"></textarea>
+                </div>
+            </div>
+
+            <!-- SEÇÃO 2: CONFIGURAÇÃO DA CAMISA -->
+            <div class="space-y-4">
+                <h2 class="text-sm font-bold tracking-wider gold-text uppercase border-b pb-1.5 border-[#c5a880]/20 flex items-center gap-2">
+                    <i class="fas fa-tshirt text-xs"></i> Configuração da Camisa
+                </h2>
+
+                <!-- Tecido -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Tecido (Valor Base)</label>
+                    <select id="tecido" class="w-full bg-black border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus">
+                        <option value="30" data-nome="Dry Liso">Dry Liso – R$ 30,00</option>
+                        <option value="32" data-nome="Dry Favo">Dry Favo – R$ 32,00</option>
+                        <option value="32" data-nome="Dry Manchester">Dry Manchester – R$ 32,00</option>
+                        <option value="37" data-nome="Dry 3D" selected>Dry 3D – R$ 37,00</option>
+                        <option value="40" data-nome="Dry UV">Dry UV – R$ 40,00</option>
+                        <option value="42" data-nome="Aero Dry">Aero Dry – R$ 42,00</option>
+                    </select>
+                </div>
+
+                <!-- Modelo -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Modelo da Camisa</label>
+                    <select id="modelo" class="w-full bg-black border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus">
+                        <option value="5" data-nome="Tradicional" selected>Tradicional – R$ 5,00</option>
+                        <option value="8" data-nome="Raglan">Raglan – R$ 8,00</option>
+                        <option value="10" data-nome="Manga Comprida">Manga Comprida – R$ 10,00</option>
+                        <option value="3" data-nome="Regata">Regata – R$ 3,00</option>
+                    </select>
+                </div>
+
+                <!-- Punho -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Punho da Manga</label>
+                    <select id="punho" class="w-full bg-black border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus">
+                        <option value="3" data-nome="Sublimado" selected>Sublimado – R$ 3,00</option>
+                        <option value="5" data-nome="Tecido">Tecido – R$ 5,00</option>
+                        <option value="7" data-nome="Ribana">Ribana – R$ 7,00</option>
+                    </select>
+                </div>
+
+                <!-- Gola -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Gola</label>
+                    <select id="gola" class="w-full bg-black border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus">
+                        <option value="5" data-nome="Em V" selected>Em V – R$ 5,00</option>
+                        <option value="5" data-nome="Careca">Careca – R$ 5,00</option>
+                        <option value="7" data-nome="Padre">Padre – R$ 7,00</option>
+                        <option value="8" data-nome="Polo">Polo – R$ 8,00</option>
+                        <option value="8" data-nome="Portuguesa">Portuguesa – R$ 8,00</option>
+                        <option value="10" data-nome="Gola Y">Gola Y – R$ 10,00</option>
+                    </select>
+                </div>
+
+                <!-- Logo da Equipe -->
+                <div>
+                    <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Logo da Equipe</label>
+                    <select id="logo" class="w-full bg-black border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus">
+                        <option value="5" data-nome="Sublimado" selected>Sublimado – R$ 5,00</option>
+                        <option value="15" data-nome="Patch emborrachado">Patch emborrachado – R$ 15,00</option>
+                    </select>
+                </div>
+
+                <!-- Patrocínios e Quantidade -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Qtd. Patrocinadores</label>
+                        <input type="number" id="patrocinios" min="0" value="0" class="w-full bg-black/40 border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus">
+                        <p class="text-[9px] text-gray-600 mt-1">+ R$ 5,00 por camisa/marca</p>
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-semibold text-gray-400 uppercase mb-1">Qtd. Camisas *</label>
+                        <input type="number" id="quantidade" min="1" value="6" class="w-full bg-black border border-gray-800 rounded px-3 py-2 text-sm text-white focus:outline-none gold-border-focus font-bold">
+                        <p class="text-[9px] text-gray-600 mt-1">Mínimo obrigatório: 6</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VALIDAÇÃO DE QUANTIDADE MÍNIMA -->
+            <div id="alerta-minimo" class="hidden bg-red-950/40 border border-red-900/60 p-3.5 rounded text-xs text-red-400 leading-relaxed">
+                <i class="fas fa-exclamation-triangle mr-1.5"></i> O pedido mínimo obrigatório para confecção de uniformes é de <strong>6 camisas</strong>. Por favor, ajuste a quantidade acima.
+            </div>
+
+            <!-- SEÇÃO 3: RESUMO E CÁLCULO DINÂMICO -->
+            <div class="bg-black/50 rounded-xl p-5 border border-gray-900 space-y-3.5 gold-gradient-bg">
+                <h3 class="text-xs font-bold tracking-wider text-gray-300 uppercase border-b pb-2 border-gray-900 flex items-center gap-2">
+                    <i class="fas fa-calculator text-gray-500"></i> Resumo Financeiro
+                </h3>
+
+                <div class="flex justify-between text-xs text-gray-400">
+                    <span>Preço Unitário da Camisa:</span>
+                    <span class="font-semibold text-white" id="resumo-unitario">R$ 0,00</span>
+                </div>
+                <div class="flex justify-between text-xs text-gray-400">
+                    <span>Quantidade Solicitada:</span>
+                    <span class="font-semibold text-white" id="resumo-quantidade">6</span>
+                </div>
+
+                <div class="flex justify-between text-sm font-bold text-[#c5a880] pt-2.5 border-t border-dashed border-gray-900">
+                    <span class="uppercase tracking-wider">TOTAL ESTIMADO:</span>
+                    <span class="text-lg font-extrabold text-white" id="resumo-total">R$ 0,00</span>
+                </div>
+
+                <!-- FORMAS DE PAGAMENTO -->
+                <div class="pt-3 border-t border-gray-900 space-y-1.5 bg-black/20 p-3 rounded border border-[#c5a880]/10">
+                    <span class="text-[9px] font-extrabold gold-text uppercase tracking-widest block mb-1">Fluxo de Pagamento Recomendado:</span>
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Entrada (50% no início):</span>
+                        <strong class="text-white" id="resumo-entrada">R$ 0,00</strong>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-400">
+                        <span>Saldo (50% na entrega):</span>
+                        <strong class="text-white" id="resumo-entrega">R$ 0,00</strong>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OBSERVAÇÃO FIXA -->
+            <div class="text-[10px] text-gray-500 italic text-justify leading-relaxed bg-black/30 p-3.5 rounded border border-gray-900">
+                <p>
+                    <strong class="gold-text"><i class="fas fa-info-circle mr-1"></i>Observação fixa:</strong> Vetorização de logos e patrocinadores não está inclusa neste orçamento e será cobrada à parte diretamente com o designer gráfico.
+                </p>
+            </div>
+
+            <!-- BOTÃO DE ENVIO -->
+            <button type="submit" id="btn-enviar" class="w-full gold-btn font-extrabold py-3.5 px-4 rounded transition duration-150 flex items-center justify-center gap-2.5 shadow-lg uppercase tracking-widest text-xs">
+                <i class="fab fa-whatsapp text-base"></i> Enviar Orçamento pelo WhatsApp
+            </button>
+
+        </form>
+    </div>
+
+    <!-- SCRIPT DE PROCESSAMENTO E CONSTRUÇÃO DO RETORNO -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Gerar número único de orçamento para rastreabilidade
+            const numeroOrcamento = 'AE-' + new Date().getFullYear() + String(new Date().getMonth() + 1).padStart(2, '0') + String(new Date().getDate()).padStart(2, '0') + '-' + Math.floor(1000 + Math.random() * 9000);
+            const dataAtual = new Date().toLocaleDateString('pt-BR');
+
+            document.getElementById('orcamento-numero').innerText = `Orçamento: #${numeroOrcamento}`;\n            document.getElementById('orcamento-data').innerText = `Data: ${dataAtual}`;
+
+            const form = document.getElementById('form-orcamento');
+            const inputs = form.querySelectorAll('select, input, textarea');
+            const alertaMinimo = document.getElementById('alerta-minimo');
+            const btnEnviar = document.getElementById('btn-enviar');
+
+            // Formatação oficial do Real
+            function formatarMoeda(valor) {
+                return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+            }
+
+            // Lógica dinâmica de cálculo
+            function calcularOrcamento() {
+                const tecidoVal = parseFloat(document.getElementById('tecido').value) || 0;
+                const modeloVal = parseFloat(document.getElementById('modelo').value) || 0;
+                const punhoVal = parseFloat(document.getElementById('punho').value) || 0;
+                const golaVal = parseFloat(document.getElementById('gola').value) || 0;
+                const logoVal = parseFloat(document.getElementById('logo').value) || 0;
+
+                const patrociniosQtd = parseInt(document.getElementById('patrocinios').value) || 0;
+                const quantidadeVal = parseInt(document.getElementById('quantidade').value) || 0;
+
+                // Valor total por camisa: Tecidos + Modelo + Punho + Gola + Logo + R$ 5 por patrocinador
+                const valorUnitario = tecidoVal + modeloVal + punhoVal + golaVal + logoVal + (patrociniosQtd * 5);
+
+                // Validação de mínimo (mínimo de 6 unidades)
+                if (quantidadeVal < 6) {
+                    alertaMinimo.classList.remove('hidden');
+                    btnEnviar.disabled = true;
+                    btnEnviar.classList.add('opacity-40', 'cursor-not-allowed');
+                } else {
+                    alertaMinimo.classList.add('hidden');
+                    btnEnviar.disabled = false;
+                    btnEnviar.classList.remove('opacity-40', 'cursor-not-allowed');
+                }
+
+                const totalPedido = valorUnitario * quantidadeVal;
+                const entradaEntrega = totalPedido / 2;
+
+                // Exibição do feedback dinâmico
+                document.getElementById('resumo-unitario').innerText = formatarMoeda(valorUnitario);
+                document.getElementById('resumo-quantidade').innerText = quantidadeVal;
+                document.getElementById('resumo-total').innerText = formatarMoeda(totalPedido);
+                document.getElementById('resumo-entrada').innerText = formatarMoeda(entradaEntrega);
+                document.getElementById('resumo-entrega').innerText = formatarMoeda(entradaEntrega);
+
+                return {
+                    valorUnitario,
+                    quantidadeVal,
+                    totalPedido,
+                    entradaEntrega,
+                    numeroOrcamento,
+                    dataAtual
+                };
+            }
+
+            // Escutar todas as alterações em tempo real
+            inputs.forEach(input => {
+                input.addEventListener('input', calcularOrcamento);
+            });
+
+            // Executar primeira leitura
+            calcularOrcamento();
+
+            // Intercepter envio do formulário
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                const dados = calcularOrcamento();
+                if (dados.quantidadeVal < 6) return; // Proteção adicional
+
+                // Coletar campos do cliente
+                const nome = document.getElementById('nome').value;
+                const equipe = document.getElementById('equipe').value;
+                const telefone = document.getElementById('client_phone').value;
+                const obs = document.getElementById('obs').value.trim() || 'Nenhuma';
+
+                // Coletar nomes amigáveis de cada opção com seus preços individuais para transparência completa
+                const selectTecido = document.getElementById('tecido');
+                const tecidoNome = selectTecido.options[selectTecido.selectedIndex].getAttribute('data-nome');
+                const tecidoPreco = parseFloat(selectTecido.value);
+
+                const selectModelo = document.getElementById('modelo');
+                const modeloNome = selectModelo.options[selectModelo.selectedIndex].getAttribute('data-nome');
+                const modeloPreco = parseFloat(selectModelo.value);
+
+                const selectPunho = document.getElementById('punho');
+                const punhoNome = selectPunho.options[selectPunho.selectedIndex].getAttribute('data-nome');
+                const punhoPreco = parseFloat(selectPunho.value);
+
+                const selectGola = document.getElementById('gola');
+                const golaNome = selectGola.options[selectGola.selectedIndex].getAttribute('data-nome');
+                const golaPreco = parseFloat(selectGola.value);
+
+                const selectLogo = document.getElementById('logo');
+                const logoNome = selectLogo.options[selectLogo.selectedIndex].getAttribute('data-nome');
+                const logoPreco = parseFloat(selectLogo.value);
+
+                const patrociniosQtd = parseInt(document.getElementById('patrocinios').value) || 0;
+                const patrociniosTotal = patrociniosQtd * 5;
+
+                // CONSTRUTOR DA MENSAGEM DO WHATSAPP (Totalmente detalhada e mastigada)
+                const mensagem =
+`👕 *NOVO ORÇAMENTO ATELIER COSTURA AE*\n---------------------------------------------\n*Nº Orçamento:* ${dados.numeroOrcamento}\n*Data:* ${dados.dataAtual}\n\n👤 *DADOS DO CLIENTE:*\n• *Nome:* ${nome}\n• *Equipe:* ${equipe}\n• *WhatsApp:* ${telefone}\n• *Obs:* ${obs}\n\n🎨 *CONFIGURAÇÕES DO PRODUTO (VALORES UNITÁRIOS):*\n• *Tecido:* ${tecidoNome} (${formatarMoeda(tecidoPreco)})\n• *Modelo:* ${modeloNome} (${formatarMoeda(modeloPreco)})\n• *Punho:* ${punhoNome} (${formatarMoeda(punhoPreco)})\n• *Gola:* ${golaNome} (${formatarMoeda(golaPreco)})\n• *Logo:* ${logoNome} (${formatarMoeda(logoPreco)})\n• *Patrocinadores:* ${patrociniosQtd} marca(s) (+ ${formatarMoeda(patrociniosTotal)} por camisa)\n\n📦 *RESUMO DO PEDIDO:*\n• *Valor Unitário Final:* ${formatarMoeda(dados.valorUnitario)}\n• *Quantidade:* ${dados.quantidadeVal} camisas (Mínimo respeitado)\n• 💰 *VALOR TOTAL DO PEDIDO:* ${formatarMoeda(dados.totalPedido)}\n\n💳 *FLUXO DE PAGAMENTO:*\n• *Entrada (50% para iniciar):* ${formatarMoeda(dados.entradaEntrega)}\n• *Entrega (50% restantes):* ${formatarMoeda(dados.entradaEntrega)}\n\n---------------------------------------------\n⚠️ *Observação:* _Vetorização de logos e patrocinadores não está inclusa neste orçamento e será cobrada à parte diretamente com o designer gráfico._\n\n_Enviado de forma automática via Calculadora Digital Atelier Costura AE._\n_SEU TIME. SUA IDENTIDADE._`;
+
+                // Link para envio ao WhatsApp do Atelier (5511977775100)
+                const urlWhatsApp = `https://wa.me/5511977775100?text=${encodeURIComponent(mensagem)}`;
+                window.open(urlWhatsApp, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
