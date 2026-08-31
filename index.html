@@ -220,6 +220,9 @@
 // Exemplo: "https://allan-atelier.github.io/atelier-calculadora/"
 const BASE_URL = "https://allanhenriquess.github.io/Or-amento/";
 
+// ⚠️ Depois de publicar o Apps Script (ver instruções), troque pelo link real terminado em /exec
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSnHuhkXupUTmpnqKbLVfkntGzkr7SE9GMmaxMWp5aoSO0FihPdK7wpY50cGIPmm75wQ/exec";
+
 function parseOpt(str){
   const [preco, nome] = str.split('|');
   return { preco: parseFloat(preco), nome };
@@ -384,6 +387,23 @@ function montarMensagem(){
   return msg;
 }
 
+function registrarPedidoNaPlanilha(numOrc, nomeCliente, nomeEquipe, obs){
+  if(!APPS_SCRIPT_URL || APPS_SCRIPT_URL.includes('COLE_AQUI')) return;
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({
+      numero_orcamento: numOrc,
+      nome_cliente: nomeCliente,
+      nome_equipe: nomeEquipe,
+      status: 'Aguardando Pagamento',
+      previsao_entrega: '',
+      observacao: obs
+    })
+  }).catch(() => { /* falha silenciosa: não deve travar o envio do orçamento pelo WhatsApp */ });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   generateOrcamento();
   maskPhone(document.getElementById('clienteWhats'));
@@ -407,6 +427,14 @@ document.addEventListener('DOMContentLoaded', () => {
       alert('Preencha nome, equipe e WhatsApp antes de enviar.');
       return;
     }
+
+    registrarPedidoNaPlanilha(
+      document.getElementById('orcamentoNumero').textContent,
+      document.getElementById('clienteNome').value,
+      document.getElementById('equipeNome').value,
+      document.getElementById('obs').value
+    );
+
     const msg = montarMensagem();
     const url = `https://wa.me/5511977775100?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
