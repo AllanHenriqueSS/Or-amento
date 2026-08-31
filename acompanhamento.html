@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier Costura AE • Acompanhar Pedido</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.1/tailwind.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050505;
+    --card:#121212;
+    --gold:#c5a880;
+    --gold-border:rgba(197,168,128,0.3);
+  }
+  *{ font-family:'Montserrat',sans-serif; }
+  body{ background:var(--bg); }
+  .card{ background:var(--card); border:1px solid var(--gold-border); }
+  .gold-text{ color:var(--gold); }
+  .gold-gradient{ background:linear-gradient(135deg,#e4cfa0 0%,#c5a880 50%,#9c7f57 100%); }
+  input{ background:#0a0a0a; border:1px solid var(--gold-border); color:#f5f5f5; }
+  input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 2px rgba(197,168,128,0.25); }
+  ::placeholder{ color:#6b6b6b; }
+  .step-progress-bar{ background:#0a0a0a; }
+  .etapa-card{ background:#0a0a0a; border:1px solid #2a2a2a; }
+  .etapa-card.done{ border-color:var(--gold-border); background:rgba(197,168,128,0.08); }
+  .etapa-card.current{ border-color:var(--gold); box-shadow:0 0 0 2px rgba(197,168,128,0.25); background:rgba(197,168,128,0.12); }
+  .etapa-icon{ background:#1a1a1a; color:#8a8a8a; }
+  .etapa-icon.done{ background:var(--gold); color:#050505; }
+  .etapa-label-num{ color:#6b6b6b; }
+  .etapa-label-name{ color:#8a8a8a; }
+  .etapa-label-name.active{ color:#f5f5f5; }
+  .spinner{ border:2px solid rgba(197,168,128,0.2); border-top-color:var(--gold); border-radius:50%; width:20px; height:20px; animation:spin 0.7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body class="min-h-screen text-white">
+
+<div class="max-w-lg mx-auto px-4 py-6 md:py-10">
+
+  <!-- Cabeçalho -->
+  <div class="card rounded-2xl p-6 mb-5 text-center">
+    <h1 class="text-2xl font-extrabold tracking-wide gold-text">ATELIER</h1>
+    <p class="text-sm text-gray-300 mt-1">Costura AE • Acompanhamento de Pedido</p>
+  </div>
+
+  <!-- Busca -->
+  <div class="card rounded-2xl p-5 mb-5">
+    <label class="text-xs text-gray-300 block mb-1">Número do Orçamento</label>
+    <div class="flex gap-2">
+      <input id="numeroInput" type="text" placeholder="#AE-20260831-1234" class="flex-1 rounded-lg px-3 py-2 text-sm">
+      <button id="buscarBtn" class="gold-gradient text-black font-bold px-4 rounded-lg text-sm">Buscar</button>
+    </div>
+    <p class="text-[11px] text-gray-500 mt-2">Esse número foi enviado junto com seu orçamento pelo WhatsApp.</p>
+  </div>
+
+  <!-- Estado: carregando -->
+  <div id="loadingState" class="hidden card rounded-2xl p-5 mb-5 flex items-center gap-3">
+    <div class="spinner"></div>
+    <span class="text-sm text-gray-300">Consultando seu pedido...</span>
+  </div>
+
+  <!-- Estado: não encontrado -->
+  <div id="notFoundState" class="hidden card rounded-2xl p-5 mb-5 text-sm text-red-400">
+    ⚠️ Não encontramos nenhum pedido com esse número. Confira se digitou certo ou fale com a gente pelo WhatsApp.
+  </div>
+
+  <!-- Estado: erro de conexão -->
+  <div id="errorState" class="hidden card rounded-2xl p-5 mb-5 text-sm text-red-400">
+    ⚠️ Não foi possível consultar o status agora. Tente novamente em alguns instantes.
+  </div>
+
+  <!-- Resultado -->
+  <div id="resultCard" class="hidden card rounded-2xl p-5 mb-5">
+    <div class="mb-4">
+      <p class="text-xs text-gray-500">Pedido</p>
+      <p id="resNumero" class="gold-text font-bold text-sm"></p>
+    </div>
+
+    <div class="flex justify-between items-start mb-4">
+      <div>
+        <p class="text-[11px] text-gray-500 uppercase tracking-wide">Cliente</p>
+        <p id="resCliente" class="font-bold text-base"></p>
+      </div>
+      <div class="text-right">
+        <p class="text-[11px] text-gray-500 uppercase tracking-wide">Status Atual</p>
+        <p id="resStatusAtual" class="font-bold text-base gold-text"></p>
+      </div>
+    </div>
+
+    <div class="mb-5">
+      <div class="flex justify-between items-center mb-1.5">
+        <span class="text-[11px] text-gray-500 uppercase tracking-wide">Progresso</span>
+        <span id="resProgressoTexto" class="text-xs font-semibold gold-text"></span>
+      </div>
+      <div class="w-full h-2 rounded-full step-progress-bar overflow-hidden">
+        <div id="resProgressoBarra" class="h-full gold-gradient rounded-full" style="width:0%"></div>
+      </div>
+    </div>
+
+    <h3 class="text-sm font-bold text-gray-300 mb-3">Acompanhamento</h3>
+    <div id="stepsContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-2"></div>
+
+    <div id="previsaoBox" class="hidden mt-4 pt-4 border-t" style="border-color:var(--gold-border)">
+      <p class="text-xs text-gray-500">Previsão de entrega</p>
+      <p id="resPrevisao" class="text-sm font-semibold"></p>
+    </div>
+
+    <div id="obsBox" class="hidden mt-4 pt-4 border-t text-sm text-gray-300" style="border-color:var(--gold-border)"></div>
+  </div>
+
+  <p class="text-center text-[11px] text-gray-600 mt-6">SEU TIME. SUA IDENTIDADE.</p>
+</div>
+
+<script>
+// ⚠️ SUBSTITUA pela URL da sua planilha publicada como CSV (Arquivo > Compartilhar > Publicar na web > formato CSV)
+const SHEET_CSV_URL = "COLE_AQUI_O_LINK_DA_PLANILHA_PUBLICADA_EM_CSV";
+
+// Ordem oficial das etapas do processo. O texto na coluna "Status" da planilha
+// precisa bater exatamente com um destes nomes para o progresso ser marcado certo.
+const ETAPAS = [
+  "Aguardando Pagamento",
+  "Fila",
+  "Diagramação",
+  "Impressão",
+  "Calandragem",
+  "Corte Laser",
+  "Revisão",
+  "Costura",
+  "Acabamento/Embalagem",
+  "Reposição",
+  "Feito",
+  "Despachado",
+  "Entregue"
+];
+
+const ICONES = ["💳","📋","✏️","🖨️","🌀","⚡","👁️","✂️","📦","🔄","✅","💬","📬"];
+
+function normalizar(txt){
+  return (txt || "").trim().toLowerCase();
+}
+
+function renderSteps(statusAtual){
+  const container = document.getElementById('stepsContainer');
+  container.innerHTML = "";
+  const idxAtual = ETAPAS.findIndex(e => normalizar(e) === normalizar(statusAtual));
+  const total = ETAPAS.length;
+  const percentual = idxAtual >= 0 ? Math.round(((idxAtual + 1) / total) * 100) : 0;
+
+  document.getElementById('resStatusAtual').textContent = idxAtual >= 0 ? ETAPAS[idxAtual] : (statusAtual || '-');
+  document.getElementById('resProgressoTexto').textContent = `${idxAtual >= 0 ? idxAtual + 1 : 0} de ${total} etapas (${percentual}%)`;
+  document.getElementById('resProgressoBarra').style.width = percentual + '%';
+
+  ETAPAS.forEach((etapa, i) => {
+    const isDone = idxAtual >= 0 && i < idxAtual;
+    const isCurrent = i === idxAtual;
+
+    const card = document.createElement('div');
+    card.className = "etapa-card rounded-xl p-3 flex flex-col items-center text-center gap-1.5" + (isDone ? " done" : "") + (isCurrent ? " current" : "");
+
+    const icon = document.createElement('div');
+    icon.className = "etapa-icon w-9 h-9 rounded-full flex items-center justify-center text-base" + ((isDone || isCurrent) ? " done" : "");
+    icon.textContent = ICONES[i] || "•";
+
+    const num = document.createElement('p');
+    num.className = "etapa-label-num text-[10px] uppercase tracking-wide";
+    num.textContent = "Etapa " + (i + 1);
+
+    const nome = document.createElement('p');
+    nome.className = "etapa-label-name text-xs font-semibold leading-tight" + ((isDone || isCurrent) ? " active" : "");
+    nome.textContent = etapa;
+
+    card.appendChild(icon);
+    card.appendChild(num);
+    card.appendChild(nome);
+    container.appendChild(card);
+  });
+
+  if(idxAtual === -1 && statusAtual){
+    const fallback = document.createElement('p');
+    fallback.className = "text-sm text-gray-300 mt-2 col-span-full";
+    fallback.textContent = "Status personalizado: " + statusAtual;
+    container.appendChild(fallback);
+  }
+}
+
+function hideAll(){
+  ['loadingState','notFoundState','errorState','resultCard'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+}
+
+async function buscarPedido(){
+  const numeroBuscado = normalizar(document.getElementById('numeroInput').value);
+  if(!numeroBuscado){
+    return;
+  }
+
+  hideAll();
+  document.getElementById('loadingState').classList.remove('hidden');
+
+  try {
+    const resp = await fetch(SHEET_CSV_URL);
+    if(!resp.ok) throw new Error('Falha na consulta');
+    const csvText = await resp.text();
+
+    const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+    const linhas = parsed.data;
+
+    const pedido = linhas.find(l => normalizar(l['Numero_Orcamento']) === numeroBuscado);
+
+    hideAll();
+
+    if(!pedido){
+      document.getElementById('notFoundState').classList.remove('hidden');
+      return;
+    }
+
+    document.getElementById('resNumero').textContent = pedido['Numero_Orcamento'];
+    document.getElementById('resCliente').textContent = pedido['Nome_Equipe'] || pedido['Nome_Cliente'] || '-';
+
+    renderSteps(pedido['Status']);
+
+    const previsao = pedido['Previsao_Entrega'];
+    if(previsao && previsao.trim()){
+      document.getElementById('previsaoBox').classList.remove('hidden');
+      document.getElementById('resPrevisao').textContent = previsao;
+    } else {
+      document.getElementById('previsaoBox').classList.add('hidden');
+    }
+
+    const obs = pedido['Observacao'];
+    const obsBox = document.getElementById('obsBox');
+    if(obs && obs.trim()){
+      obsBox.classList.remove('hidden');
+      obsBox.textContent = obs;
+    } else {
+      obsBox.classList.add('hidden');
+    }
+
+    document.getElementById('resultCard').classList.remove('hidden');
+
+  } catch(err){
+    hideAll();
+    document.getElementById('errorState').classList.remove('hidden');
+  }
+}
+
+document.getElementById('buscarBtn').addEventListener('click', buscarPedido);
+document.getElementById('numeroInput').addEventListener('keypress', (e) => {
+  if(e.key === 'Enter') buscarPedido();
+});
+
+// Se o link já vier com o número do pedido (ex: acompanhamento.html?pedido=%23AE-20260831-1234),
+// preenche o campo sozinho e busca na hora, sem o cliente precisar digitar nada.
+(function autoBuscarPeloLink(){
+  const params = new URLSearchParams(window.location.search);
+  const pedidoNaUrl = params.get('pedido');
+  if(pedidoNaUrl){
+    document.getElementById('numeroInput').value = decodeURIComponent(pedidoNaUrl);
+    buscarPedido();
+  }
+})();
+</script>
+</body>
+</html>

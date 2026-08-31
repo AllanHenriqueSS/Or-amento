@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier Costura AE • Orçamento de Uniformes</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.4.1/tailwind.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050505;
+    --card:#121212;
+    --gold:#c5a880;
+    --gold-border:rgba(197,168,128,0.3);
+  }
+  *{ font-family:'Montserrat',sans-serif; }
+  body{ background:var(--bg); }
+  .card{ background:var(--card); border:1px solid var(--gold-border); }
+  .gold-text{ color:var(--gold); }
+  .gold-gradient{ background:linear-gradient(135deg,#e4cfa0 0%,#c5a880 50%,#9c7f57 100%); }
+  .field-label{ color:#d4d4d4; }
+  select, input, textarea{
+    background:#0a0a0a;
+    border:1px solid var(--gold-border);
+    color:#f5f5f5;
+  }
+  select:focus, input:focus, textarea:focus{
+    outline:none;
+    border-color:var(--gold);
+    box-shadow:0 0 0 2px rgba(197,168,128,0.25);
+  }
+  .divider{ border-color:var(--gold-border); }
+  ::placeholder{ color:#6b6b6b; }
+  .toggle-section{ transition:max-height 0.3s ease, opacity 0.3s ease; overflow:hidden; }
+  .fade-in{ animation:fadeIn .25s ease-in; }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);} }
+</style>
+</head>
+<body class="min-h-screen text-white">
+
+<div class="max-w-lg mx-auto px-4 py-6 md:py-10">
+
+  <!-- Rastreabilidade -->
+  <div class="flex justify-between text-xs text-gray-500 mb-4 px-1">
+    <span id="orcamentoNumero">#AE-00000000-0000</span>
+    <span id="orcamentoData">--/--/----</span>
+  </div>
+
+  <!-- Cabeçalho -->
+  <div class="card rounded-2xl p-6 mb-5 text-center">
+    <img src="data:image/jpeg;base64,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" alt="Logo Atelier Costura AE" class="w-20 h-20 mx-auto rounded-full mb-3" />
+    <h1 class="text-3xl font-extrabold tracking-wide gold-text">ATELIER</h1>
+    <p class="text-sm text-gray-300 mt-1">Costura AE • Uniformes Esportivos</p>
+    <div class="inline-block mt-3 px-4 py-1.5 rounded-full border gold-text text-xs font-semibold" style="border-color:var(--gold-border)">
+      SEU TIME. SUA IDENTIDADE.
+    </div>
+  </div>
+
+  <!-- Seção A: Dados do Cliente -->
+  <div class="card rounded-2xl p-5 mb-5">
+    <h2 class="text-lg font-bold gold-text mb-4">Dados do Cliente</h2>
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs field-label block mb-1">Nome Completo *</label>
+        <input id="clienteNome" type="text" class="w-full rounded-lg px-3 py-2 text-sm" placeholder="Seu nome" required>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Nome da Equipe *</label>
+        <input id="equipeNome" type="text" class="w-full rounded-lg px-3 py-2 text-sm" placeholder="Nome do time" required>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">WhatsApp de Contato *</label>
+        <input id="clienteWhats" type="tel" class="w-full rounded-lg px-3 py-2 text-sm" placeholder="(11) 91234-5678" required>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Observações do Pedido</label>
+        <textarea id="obs" rows="2" class="w-full rounded-lg px-3 py-2 text-sm" placeholder="Notas adicionais"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção B: Camisa -->
+  <div class="card rounded-2xl p-5 mb-5">
+    <h2 class="text-lg font-bold gold-text mb-4">Camisa</h2>
+    <div class="space-y-3">
+      <div>
+        <label class="text-xs field-label block mb-1">Tecido (valor base)</label>
+        <select id="tecido" class="w-full rounded-lg px-3 py-2 text-sm">
+          <option value="30|Dry Liso">Dry Liso — R$ 30,00</option>
+          <option value="32|Dry Favo">Dry Favo — R$ 32,00</option>
+          <option value="32|Dry Manchester">Dry Manchester — R$ 32,00</option>
+          <option value="37|Dry 3D" selected>Dry 3D — R$ 37,00</option>
+          <option value="40|Dry UV">Dry UV — R$ 40,00</option>
+          <option value="42|Aero Dry">Aero Dry — R$ 42,00</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Modelo da Camisa</label>
+        <select id="modelo" class="w-full rounded-lg px-3 py-2 text-sm">
+          <option value="5|Tradicional" selected>Tradicional — R$ 5,00</option>
+          <option value="8|Raglan">Raglan — R$ 8,00</option>
+          <option value="10|Manga Comprida">Manga Comprida — R$ 10,00</option>
+          <option value="3|Regata">Regata — R$ 3,00</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Punho da Manga</label>
+        <select id="punho" class="w-full rounded-lg px-3 py-2 text-sm">
+          <option value="3|Sublimado" selected>Sublimado — R$ 3,00</option>
+          <option value="5|Tecido">Tecido — R$ 5,00</option>
+          <option value="7|Ribana">Ribana — R$ 7,00</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Gola</label>
+        <select id="gola" class="w-full rounded-lg px-3 py-2 text-sm">
+          <option value="5|Em V" selected>Em V — R$ 5,00</option>
+          <option value="5|Careca">Careca — R$ 5,00</option>
+          <option value="7|Padre">Padre — R$ 7,00</option>
+          <option value="8|Polo">Polo — R$ 8,00</option>
+          <option value="8|Portuguesa">Portuguesa — R$ 8,00</option>
+          <option value="10|Gola Y">Gola Y — R$ 10,00</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Logo da Equipe (Escudo)</label>
+        <select id="logoEquipe" class="w-full rounded-lg px-3 py-2 text-sm">
+          <option value="5|Sublimado" selected>Sublimado — R$ 5,00</option>
+          <option value="15|Patch emborrachado">Patch emborrachado — R$ 15,00</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Patrocínios na Camisa</label>
+        <input id="patrocinioCamisa" type="number" min="0" value="0" class="w-full rounded-lg px-3 py-2 text-sm">
+        <p class="text-[11px] text-gray-500 mt-1">De 1 a 3 marcas: R$ 5,00 fixo. A partir da 4ª: +R$ 5,00 por marca.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção C: Shorts -->
+  <div class="card rounded-2xl p-5 mb-5">
+    <label class="flex items-center justify-between cursor-pointer">
+      <span class="text-lg font-bold gold-text">Incluir Shorts</span>
+      <input id="includeShorts" type="checkbox" class="w-5 h-5 accent-[#c5a880]">
+    </label>
+    <div id="shortsFields" class="toggle-section max-h-0 opacity-0 mt-0 space-y-3">
+      <div>
+        <label class="text-xs field-label block mb-1">Tecido do Shorts</label>
+        <select id="shortsTecido" class="w-full rounded-lg px-3 py-2 text-sm">
+          <option value="20|Helanca" selected>Helanca — R$ 20,00</option>
+          <option value="25|Dry Liso">Dry Liso — R$ 25,00</option>
+        </select>
+      </div>
+      <div>
+        <label class="text-xs field-label block mb-1">Patrocínios no Shorts</label>
+        <input id="patrocinioShorts" type="number" min="0" value="0" class="w-full rounded-lg px-3 py-2 text-sm">
+        <p class="text-[11px] text-gray-500 mt-1">Mesma regra da camisa: 1 a 3 marcas = R$ 5,00 fixo; a partir da 4ª, +R$ 5,00 cada.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção D: Meião -->
+  <div class="card rounded-2xl p-5 mb-5">
+    <label class="flex items-center justify-between cursor-pointer">
+      <span class="text-lg font-bold gold-text">Incluir Meião</span>
+      <input id="includeMeiao" type="checkbox" class="w-5 h-5 accent-[#c5a880]">
+    </label>
+    <div id="meiaoFields" class="toggle-section max-h-0 opacity-0 mt-0 space-y-3">
+      <div>
+        <label class="text-xs field-label block mb-1">Tipo do Meião</label>
+        <select id="meiaoTipo" class="w-full rounded-lg px-3 py-2 text-sm">
+          <option value="20|Cor Lisa" selected>Cor Lisa — R$ 20,00</option>
+          <option value="25|Com Listras">Com Listras — R$ 25,00</option>
+          <option value="30|Premium">Premium — R$ 30,00</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção E: Quantidade -->
+  <div class="card rounded-2xl p-5 mb-5">
+    <label class="text-xs field-label block mb-1">Quantidade de Camisas / Kits</label>
+    <input id="quantidade" type="number" min="1" value="6" class="w-full rounded-lg px-3 py-2 text-sm">
+    <p id="minAlerta" class="hidden mt-2 text-sm text-red-400 font-semibold">⚠️ O pedido mínimo do Atelier é de 6 unidades. Ajuste a quantidade para continuar.</p>
+  </div>
+
+  <!-- Resumo -->
+  <div class="card rounded-2xl p-5 mb-5">
+    <h2 class="text-lg font-bold gold-text mb-4">Resumo do Pedido</h2>
+    <div class="space-y-2 text-sm">
+      <div class="flex justify-between"><span class="text-gray-400">Valor unitário do kit</span><span id="resUnit" class="font-semibold">R$ 0,00</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Quantidade</span><span id="resQtd" class="font-semibold">6</span></div>
+      <div class="flex justify-between border-t divider pt-2 mt-2"><span class="gold-text font-bold">Valor Total</span><span id="resTotal" class="gold-text font-bold text-lg">R$ 0,00</span></div>
+      <div class="flex justify-between pt-2 border-t divider mt-2"><span class="text-gray-400">Entrada (50%)</span><span id="resEntrada">R$ 0,00</span></div>
+      <div class="flex justify-between"><span class="text-gray-400">Saldo na entrega (50%)</span><span id="resSaldo">R$ 0,00</span></div>
+    </div>
+  </div>
+
+  <!-- Avisos fixos -->
+  <div class="rounded-xl border p-4 mb-5 text-xs text-gray-400 leading-relaxed" style="border-color:var(--gold-border)">
+    <p class="mb-2">⚠️ Vetorização de logos e patrocinadores não está inclusa neste orçamento e será cobrada à parte diretamente com o designer gráfico.</p>
+    <p>⚠️ Logos de patrocinadores devem ser enviados em alta definição (mínimo 300dpi ou arquivo vetorial). A qualidade da imagem original impacta diretamente o resultado final da sublimação.</p>
+  </div>
+
+  <button id="enviarBtn" class="w-full gold-gradient text-black font-bold py-3.5 rounded-xl text-sm tracking-wide transition disabled:opacity-40">
+    Enviar Orçamento pelo WhatsApp
+  </button>
+
+  <p class="text-center text-sm mt-4">
+    <a href="acompanhamento.html" class="gold-text underline">Já fez seu pedido? Acompanhe o status aqui</a>
+  </p>
+
+  <p class="text-center text-[11px] text-gray-600 mt-6">SEU TIME. SUA IDENTIDADE.</p>
+</div>
+
+<script>
+// ⚠️ Depois de publicar no GitHub Pages, troque pela URL real do seu site
+// (o próprio GitHub mostra esse endereço em Settings > Pages).
+// Exemplo: "https://allan-atelier.github.io/atelier-calculadora/"
+const BASE_URL = "https://SEU-USUARIO.github.io/SEU-REPOSITORIO/";
+
+function parseOpt(str){
+  const [preco, nome] = str.split('|');
+  return { preco: parseFloat(preco), nome };
+}
+
+function sponsorExtra(qty){
+  qty = Math.max(0, parseInt(qty) || 0);
+  if(qty === 0) return 0;
+  if(qty <= 3) return 5;
+  return 5 + 5 * (qty - 3);
+}
+
+function fmt(v){
+  return v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function generateOrcamento(){
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth()+1).padStart(2,'0');
+  const d = String(now.getDate()).padStart(2,'0');
+  const rand = String(Math.floor(Math.random()*9000)+1000);
+  document.getElementById('orcamentoNumero').textContent = `#AE-${y}${m}${d}-${rand}`;
+  document.getElementById('orcamentoData').textContent = now.toLocaleDateString('pt-BR');
+}
+
+function toggleSection(checkbox, section){
+  if(checkbox.checked){
+    section.style.maxHeight = section.scrollHeight + 'px';
+    section.style.opacity = '1';
+    section.classList.add('mt-4');
+  } else {
+    section.style.maxHeight = '0px';
+    section.style.opacity = '0';
+    section.classList.remove('mt-4');
+  }
+}
+
+function maskPhone(input){
+  input.addEventListener('input', () => {
+    let v = input.value.replace(/\D/g,'').slice(0,11);
+    if(v.length > 6){
+      v = v.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+    } else if(v.length > 2){
+      v = v.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+    } else if(v.length > 0){
+      v = v.replace(/(\d{0,2})/, '($1');
+    }
+    input.value = v.trim().replace(/-$/,'');
+  });
+}
+
+function calcular(){
+  const tecido = parseOpt(document.getElementById('tecido').value);
+  const modelo = parseOpt(document.getElementById('modelo').value);
+  const punho = parseOpt(document.getElementById('punho').value);
+  const gola = parseOpt(document.getElementById('gola').value);
+  const logoEq = parseOpt(document.getElementById('logoEquipe').value);
+  const patrocinioCamisaQtd = document.getElementById('patrocinioCamisa').value;
+  const extraCamisa = sponsorExtra(patrocinioCamisaQtd);
+
+  const unitCamisa = tecido.preco + modelo.preco + punho.preco + gola.preco + logoEq.preco + extraCamisa;
+
+  const includeShorts = document.getElementById('includeShorts').checked;
+  let unitShorts = 0, shortsTecido = null, extraShorts = 0, patrocinioShortsQtd = 0;
+  if(includeShorts){
+    shortsTecido = parseOpt(document.getElementById('shortsTecido').value);
+    patrocinioShortsQtd = document.getElementById('patrocinioShorts').value;
+    extraShorts = sponsorExtra(patrocinioShortsQtd);
+    unitShorts = shortsTecido.preco + extraShorts;
+  }
+
+  const includeMeiao = document.getElementById('includeMeiao').checked;
+  let unitMeiao = 0, meiaoTipo = null;
+  if(includeMeiao){
+    meiaoTipo = parseOpt(document.getElementById('meiaoTipo').value);
+    unitMeiao = meiaoTipo.preco;
+  }
+
+  const unitKit = unitCamisa + unitShorts + unitMeiao;
+  const qtd = Math.max(1, parseInt(document.getElementById('quantidade').value) || 0);
+  const total = unitKit * qtd;
+  const entrada = total / 2;
+  const saldo = total / 2;
+
+  document.getElementById('resUnit').textContent = 'R$ ' + fmt(unitKit);
+  document.getElementById('resQtd').textContent = qtd;
+  document.getElementById('resTotal').textContent = 'R$ ' + fmt(total);
+  document.getElementById('resEntrada').textContent = 'R$ ' + fmt(entrada);
+  document.getElementById('resSaldo').textContent = 'R$ ' + fmt(saldo);
+
+  const btn = document.getElementById('enviarBtn');
+  const alerta = document.getElementById('minAlerta');
+  if(qtd < 6){
+    alerta.classList.remove('hidden');
+    btn.disabled = true;
+  } else {
+    alerta.classList.add('hidden');
+    btn.disabled = false;
+  }
+
+  return {
+    tecido, modelo, punho, gola, logoEq, patrocinioCamisaQtd, extraCamisa, unitCamisa,
+    includeShorts, shortsTecido, extraShorts, patrocinioShortsQtd, unitShorts,
+    includeMeiao, meiaoTipo, unitMeiao,
+    unitKit, qtd, total, entrada, saldo
+  };
+}
+
+function montarMensagem(){
+  const c = calcular();
+  const nome = document.getElementById('clienteNome').value || '-';
+  const equipe = document.getElementById('equipeNome').value || '-';
+  const whats = document.getElementById('clienteWhats').value || '-';
+  const obs = document.getElementById('obs').value || '-';
+  const numOrc = document.getElementById('orcamentoNumero').textContent;
+  const dataOrc = document.getElementById('orcamentoData').textContent;
+
+  let msg = `👕 *NOVO ORÇAMENTO ATELIER COSTURA AE*\n`;
+  msg += `---------------------------------------------\n`;
+  msg += `*Nº Orçamento:* ${numOrc}\n`;
+  msg += `*Data:* ${dataOrc}\n\n`;
+  msg += `👤 *DADOS DO CLIENTE:*\n`;
+  msg += `• *Nome:* ${nome}\n`;
+  msg += `• *Equipe:* ${equipe}\n`;
+  msg += `• *WhatsApp:* ${whats}\n`;
+  msg += `• *Obs:* ${obs}\n\n`;
+  msg += `🎨 *CAMISA (VALORES UNITÁRIOS):*\n`;
+  msg += `• *Tecido:* ${c.tecido.nome} (R$ ${fmt(c.tecido.preco)})\n`;
+  msg += `• *Modelo:* ${c.modelo.nome} (R$ ${fmt(c.modelo.preco)})\n`;
+  msg += `• *Punho:* ${c.punho.nome} (R$ ${fmt(c.punho.preco)})\n`;
+  msg += `• *Gola:* ${c.gola.nome} (R$ ${fmt(c.gola.preco)})\n`;
+  msg += `• *Logo:* ${c.logoEq.nome} (R$ ${fmt(c.logoEq.preco)})\n`;
+  msg += `• *Patrocinadores na camisa:* ${c.patrocinioCamisaQtd} marca(s) (+ R$ ${fmt(c.extraCamisa)} no valor unitário)\n\n`;
+
+  if(c.includeShorts){
+    msg += `🩳 *SHORTS:*\n`;
+    msg += `• *Tecido:* ${c.shortsTecido.nome} (R$ ${fmt(c.shortsTecido.preco)})\n`;
+    msg += `• *Patrocinadores no shorts:* ${c.patrocinioShortsQtd} marca(s) (+ R$ ${fmt(c.extraShorts)} no valor unitário)\n\n`;
+  }
+
+  if(c.includeMeiao){
+    msg += `🧦 *MEIÃO:*\n`;
+    msg += `• *Tipo:* ${c.meiaoTipo.nome} (R$ ${fmt(c.meiaoTipo.preco)})\n\n`;
+  }
+
+  msg += `📦 *RESUMO DO PEDIDO:*\n`;
+  msg += `• *Valor Unitário do Kit:* R$ ${fmt(c.unitKit)}\n`;
+  msg += `• *Quantidade:* ${c.qtd} kits\n`;
+  msg += `• 💰 *VALOR TOTAL DO PEDIDO:* R$ ${fmt(c.total)}\n\n`;
+  msg += `💳 *FLUXO DE PAGAMENTO:*\n`;
+  msg += `• *Entrada (50% para iniciar):* R$ ${fmt(c.entrada)}\n`;
+  msg += `• *Entrega (50% restantes):* R$ ${fmt(c.saldo)}\n\n`;
+  msg += `🔗 *Acompanhe seu pedido:*\n`;
+  msg += `${BASE_URL}acompanhamento.html?pedido=${encodeURIComponent(numOrc)}\n\n`;
+  msg += `---------------------------------------------\n`;
+  msg += `⚠️ *Vetorização de logos e patrocinadores não está inclusa neste orçamento e será cobrada à parte diretamente com o designer gráfico.*\n`;
+  msg += `⚠️ *Logos de patrocinadores devem ser enviados em alta definição (mín. 300dpi ou vetor).*\n\n`;
+  msg += `_Enviado de forma automática via Calculadora Digital Atelier Costura AE._\n`;
+  msg += `_SEU TIME. SUA IDENTIDADE._`;
+
+  return msg;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  generateOrcamento();
+  maskPhone(document.getElementById('clienteWhats'));
+
+  const shortsCheckbox = document.getElementById('includeShorts');
+  const shortsSection = document.getElementById('shortsFields');
+  const meiaoCheckbox = document.getElementById('includeMeiao');
+  const meiaoSection = document.getElementById('meiaoFields');
+
+  shortsCheckbox.addEventListener('change', () => { toggleSection(shortsCheckbox, shortsSection); calcular(); });
+  meiaoCheckbox.addEventListener('change', () => { toggleSection(meiaoCheckbox, meiaoSection); calcular(); });
+
+  const inputs = document.querySelectorAll('select, input[type="number"]');
+  inputs.forEach(el => el.addEventListener('input', calcular));
+  inputs.forEach(el => el.addEventListener('change', calcular));
+
+  calcular();
+
+  document.getElementById('enviarBtn').addEventListener('click', () => {
+    if(!document.getElementById('clienteNome').value || !document.getElementById('equipeNome').value || !document.getElementById('clienteWhats').value){
+      alert('Preencha nome, equipe e WhatsApp antes de enviar.');
+      return;
+    }
+    const msg = montarMensagem();
+    const url = `https://wa.me/5511977775100?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank');
+  });
+});
+</script>
+</body>
+</html>
