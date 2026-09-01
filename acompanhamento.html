@@ -22,16 +22,16 @@
   .gold-gradient{ background:linear-gradient(135deg,#e4cfa0 0%,#c5a880 50%,#9c7f57 100%); }
   input{ background:#0a0a0a; border:1px solid var(--gold-border); color:#f5f5f5; }
   input:focus{ outline:none; border-color:var(--gold); box-shadow:0 0 0 2px rgba(197,168,128,0.25); }
-  ::placeholder{ color:#6b6b6b; }
+  ::placeholder{ color:#8a8a8a; }
   .step-progress-bar{ background:#0a0a0a; }
-  .etapa-card{ background:#0a0a0a; border:1px solid #2a2a2a; }
+  .etapa-card{ background:#0a0a0a; border:1px solid #2f2f2f; }
   .etapa-card.done{ border-color:var(--gold-border); background:rgba(197,168,128,0.08); }
   .etapa-card.current{ border-color:var(--gold); box-shadow:0 0 0 2px rgba(197,168,128,0.25); background:rgba(197,168,128,0.12); }
-  .etapa-icon{ background:#1a1a1a; color:#8a8a8a; }
-  .etapa-icon.done{ background:var(--gold); color:#050505; }
-  .etapa-label-num{ color:#6b6b6b; }
-  .etapa-label-name{ color:#8a8a8a; }
-  .etapa-label-name.active{ color:#f5f5f5; }
+  .etapa-icon{ background:#1f1f1f; }
+  .etapa-icon.done{ background:var(--gold); }
+  .etapa-label-num{ color:#a3a3a3; }
+  .etapa-label-name{ color:#b8b8b8; }
+  .etapa-label-name.active{ color:#ffffff; }
   .spinner{ border:2px solid rgba(197,168,128,0.2); border-top-color:var(--gold); border-radius:50%; width:20px; height:20px; animation:spin 0.7s linear infinite; }
   @keyframes spin{ to{ transform:rotate(360deg); } }
 </style>
@@ -53,7 +53,7 @@
       <input id="numeroInput" type="text" placeholder="#AE-20260831-1234" class="flex-1 rounded-lg px-3 py-2 text-sm">
       <button id="buscarBtn" class="gold-gradient text-black font-bold px-4 rounded-lg text-sm">Buscar</button>
     </div>
-    <p class="text-[11px] text-gray-500 mt-2">Esse número foi enviado junto com seu orçamento pelo WhatsApp.</p>
+    <p class="text-[11px] text-gray-300 mt-2">Esse número foi enviado junto com seu orçamento pelo WhatsApp.</p>
   </div>
 
   <!-- Estado: carregando -->
@@ -75,24 +75,24 @@
   <!-- Resultado -->
   <div id="resultCard" class="hidden card rounded-2xl p-5 mb-5">
     <div class="mb-4">
-      <p class="text-xs text-gray-500">Pedido</p>
+      <p class="text-xs text-gray-300">Pedido</p>
       <p id="resNumero" class="gold-text font-bold text-sm"></p>
     </div>
 
     <div class="flex justify-between items-start mb-4">
       <div>
-        <p class="text-[11px] text-gray-500 uppercase tracking-wide">Cliente</p>
+        <p class="text-[11px] text-gray-300 uppercase tracking-wide">Cliente</p>
         <p id="resCliente" class="font-bold text-base"></p>
       </div>
       <div class="text-right">
-        <p class="text-[11px] text-gray-500 uppercase tracking-wide">Status Atual</p>
+        <p class="text-[11px] text-gray-300 uppercase tracking-wide">Status Atual</p>
         <p id="resStatusAtual" class="font-bold text-base gold-text"></p>
       </div>
     </div>
 
     <div class="mb-5">
       <div class="flex justify-between items-center mb-1.5">
-        <span class="text-[11px] text-gray-500 uppercase tracking-wide">Progresso</span>
+        <span class="text-[11px] text-gray-300 uppercase tracking-wide">Progresso</span>
         <span id="resProgressoTexto" class="text-xs font-semibold gold-text"></span>
       </div>
       <div class="w-full h-2 rounded-full step-progress-bar overflow-hidden">
@@ -101,17 +101,17 @@
     </div>
 
     <h3 class="text-sm font-bold text-gray-300 mb-3">Acompanhamento</h3>
-    <div id="stepsContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 mb-2"></div>
+    <div id="stepsContainer" class="grid grid-cols-2 gap-2 mb-2"></div>
 
     <div id="previsaoBox" class="hidden mt-4 pt-4 border-t" style="border-color:var(--gold-border)">
-      <p class="text-xs text-gray-500">Previsão de entrega</p>
+      <p class="text-xs text-gray-300">Previsão de entrega</p>
       <p id="resPrevisao" class="text-sm font-semibold"></p>
     </div>
 
     <div id="obsBox" class="hidden mt-4 pt-4 border-t text-sm text-gray-300" style="border-color:var(--gold-border)"></div>
   </div>
 
-  <p class="text-center text-[11px] text-gray-600 mt-6">SEU TIME. SUA IDENTIDADE.</p>
+  <p class="text-center text-[11px] text-gray-400 mt-6">SEU TIME. SUA IDENTIDADE.</p>
 </div>
 
 <script>
@@ -158,23 +158,27 @@ function renderSteps(statusAtual){
     const isCurrent = i === idxAtual;
 
     const card = document.createElement('div');
-    card.className = "etapa-card rounded-xl p-3 flex flex-col items-center text-center gap-1.5" + (isDone ? " done" : "") + (isCurrent ? " current" : "");
+    card.className = "etapa-card rounded-xl p-2.5 flex items-center gap-2.5" + (isDone ? " done" : "") + (isCurrent ? " current" : "");
 
     const icon = document.createElement('div');
-    icon.className = "etapa-icon w-9 h-9 rounded-full flex items-center justify-center text-base" + ((isDone || isCurrent) ? " done" : "");
+    icon.className = "etapa-icon w-9 h-9 rounded-full flex items-center justify-center text-base flex-shrink-0" + ((isDone || isCurrent) ? " done" : "");
     icon.textContent = ICONES[i] || "•";
 
+    const textCol = document.createElement('div');
+    textCol.className = "min-w-0";
+
     const num = document.createElement('p');
-    num.className = "etapa-label-num text-[10px] uppercase tracking-wide";
+    num.className = "etapa-label-num text-[10px] uppercase tracking-wide leading-tight";
     num.textContent = "Etapa " + (i + 1);
 
     const nome = document.createElement('p');
     nome.className = "etapa-label-name text-xs font-semibold leading-tight" + ((isDone || isCurrent) ? " active" : "");
     nome.textContent = etapa;
 
+    textCol.appendChild(num);
+    textCol.appendChild(nome);
     card.appendChild(icon);
-    card.appendChild(num);
-    card.appendChild(nome);
+    card.appendChild(textCol);
     container.appendChild(card);
   });
 
