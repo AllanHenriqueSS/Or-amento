@@ -41,45 +41,44 @@
 <div class="max-w-lg mx-auto px-4 py-6 md:py-10">
 
   <!-- Cabeçalho -->
-  <div class="card rounded-2xl p-6 mb-5 text-center">
-    <h1 class="text-2xl font-extrabold tracking-wide gold-text">ATELIER</h1>
-    <p class="text-sm text-gray-300 mt-1">Costura AE • Acompanhamento de Pedido</p>
+  <div class="card rounded-2xl p-4 mb-3 text-center">
+    <h1 class="text-xl font-extrabold tracking-wide gold-text">ATELIER</h1>
+    <p class="text-xs text-gray-300 mt-0.5">Costura AE • Acompanhamento de Pedido</p>
   </div>
 
   <!-- Busca -->
-  <div class="card rounded-2xl p-5 mb-5">
+  <div class="card rounded-2xl p-4 mb-3">
     <label class="text-xs text-gray-300 block mb-1">Número do Orçamento</label>
     <div class="flex gap-2">
       <input id="numeroInput" type="text" placeholder="#AE-20260831-1234" class="flex-1 rounded-lg px-3 py-2 text-sm">
       <button id="buscarBtn" class="gold-gradient text-black font-bold px-4 rounded-lg text-sm">Buscar</button>
     </div>
-    <p class="text-[11px] text-gray-300 mt-2">Esse número foi enviado junto com seu orçamento pelo WhatsApp.</p>
   </div>
 
   <!-- Estado: carregando -->
-  <div id="loadingState" class="hidden card rounded-2xl p-5 mb-5 flex items-center gap-3">
+  <div id="loadingState" class="hidden card rounded-2xl p-4 mb-3 flex items-center gap-3">
     <div class="spinner"></div>
     <span class="text-sm text-gray-300">Consultando seu pedido...</span>
   </div>
 
   <!-- Estado: não encontrado -->
-  <div id="notFoundState" class="hidden card rounded-2xl p-5 mb-5 text-sm text-red-400">
+  <div id="notFoundState" class="hidden card rounded-2xl p-4 mb-3 text-sm text-red-400">
     ⚠️ Não encontramos nenhum pedido com esse número. Confira se digitou certo ou fale com a gente pelo WhatsApp.
   </div>
 
   <!-- Estado: erro de conexão -->
-  <div id="errorState" class="hidden card rounded-2xl p-5 mb-5 text-sm text-red-400">
+  <div id="errorState" class="hidden card rounded-2xl p-4 mb-3 text-sm text-red-400">
     ⚠️ Não foi possível consultar o status agora. Tente novamente em alguns instantes.
   </div>
 
   <!-- Resultado -->
-  <div id="resultCard" class="hidden card rounded-2xl p-5 mb-5">
-    <div class="mb-4">
+  <div id="resultCard" class="hidden card rounded-2xl p-4 mb-3">
+    <div class="mb-3">
       <p class="text-xs text-gray-300">Pedido</p>
       <p id="resNumero" class="gold-text font-bold text-sm"></p>
     </div>
 
-    <div class="flex justify-between items-start mb-4">
+    <div class="flex justify-between items-start mb-3">
       <div>
         <p class="text-[11px] text-gray-300 uppercase tracking-wide">Cliente</p>
         <p id="resCliente" class="font-bold text-base"></p>
@@ -90,8 +89,8 @@
       </div>
     </div>
 
-    <div class="mb-5">
-      <div class="flex justify-between items-center mb-1.5">
+    <div class="mb-3">
+      <div class="flex justify-between items-center mb-1">
         <span class="text-[11px] text-gray-300 uppercase tracking-wide">Progresso</span>
         <span id="resProgressoTexto" class="text-xs font-semibold gold-text"></span>
       </div>
@@ -100,7 +99,7 @@
       </div>
     </div>
 
-    <h3 class="text-sm font-bold text-gray-300 mb-3">Acompanhamento</h3>
+    <h3 class="text-sm font-bold text-gray-300 mb-2">Acompanhamento</h3>
     <div id="stepsContainer" class="grid grid-cols-3 gap-1.5 mb-2"></div>
 
     <div id="previsaoBox" class="hidden mt-4 pt-4 border-t" style="border-color:var(--gold-border)">
@@ -176,13 +175,13 @@ function renderSteps(statusAtual){
     const isCurrent = i === idxAtual;
 
     const card = document.createElement('div');
-    card.className = "etapa-card rounded-lg p-1.5 flex flex-col gap-1 min-w-0" + (isDone ? " done" : "") + (isCurrent ? " current" : "");
+    card.className = "etapa-card rounded-lg p-2 flex flex-col gap-1 min-w-0" + (isDone ? " done" : "") + (isCurrent ? " current" : "");
 
     const topRow = document.createElement('div');
     topRow.className = "flex items-center gap-1";
 
     const icon = document.createElement('div');
-    icon.className = "etapa-icon w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" + ((isDone || isCurrent) ? " done" : "");
+    icon.className = "etapa-icon w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" + ((isDone || isCurrent) ? " done" : "");
     icon.innerHTML = svgIcon(ICONES[i] || "");
 
     const num = document.createElement('p');
@@ -193,9 +192,8 @@ function renderSteps(statusAtual){
     topRow.appendChild(num);
 
     const nome = document.createElement('p');
-    nome.className = "etapa-label-name text-[10px] font-semibold leading-tight truncate" + ((isDone || isCurrent) ? " active" : "");
+    nome.className = "etapa-label-name text-[10.5px] font-semibold leading-tight" + ((isDone || isCurrent) ? " active" : "");
     nome.textContent = etapa;
-    nome.title = etapa;
 
     card.appendChild(topRow);
     card.appendChild(nome);
