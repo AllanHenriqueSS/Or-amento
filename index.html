@@ -204,12 +204,8 @@
   </div>
 
   <button id="enviarBtn" class="w-full gold-gradient text-black font-bold py-3.5 rounded-xl text-sm tracking-wide transition disabled:opacity-40">
-    Enviar Orçamento pelo WhatsApp
+    Aprovar Orçamento
   </button>
-
-  <p class="text-center text-sm mt-4">
-    <a href="acompanhamento.html" class="gold-text underline">Já fez seu pedido? Acompanhe o status aqui</a>
-  </p>
 
   <p class="text-center text-[11px] text-gray-600 mt-6">SEU TIME. SUA IDENTIDADE.</p>
 </div>
@@ -218,8 +214,6 @@
 // ⚠️ Depois de publicar no GitHub Pages, troque pela URL real do seu site
 // (o próprio GitHub mostra esse endereço em Settings > Pages).
 // Exemplo: "https://allan-atelier.github.io/atelier-calculadora/"
-const BASE_URL = "https://allanhenriquess.github.io/Or-amento/";
-
 // ⚠️ Depois de publicar o Apps Script (ver instruções), troque pelo link real terminado em /exec
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwSnHuhkXupUTmpnqKbLVfkntGzkr7SE9GMmaxMWp5aoSO0FihPdK7wpY50cGIPmm75wQ/exec";
 
@@ -341,7 +335,7 @@ function montarMensagem(){
   const numOrc = document.getElementById('orcamentoNumero').textContent;
   const dataOrc = document.getElementById('orcamentoData').textContent;
 
-  let msg = `👕 *NOVO ORÇAMENTO ATELIER COSTURA AE*\n`;
+  let msg = `✅ *ORÇAMENTO APROVADO • ATELIER COSTURA AE*\n`;
   msg += `---------------------------------------------\n`;
   msg += `*Nº Orçamento:* ${numOrc}\n`;
   msg += `*Data:* ${dataOrc}\n\n`;
@@ -376,8 +370,6 @@ function montarMensagem(){
   msg += `💳 *FLUXO DE PAGAMENTO:*\n`;
   msg += `• *Entrada (50% para iniciar):* R$ ${fmt(c.entrada)}\n`;
   msg += `• *Entrega (50% restantes):* R$ ${fmt(c.saldo)}\n\n`;
-  msg += `🔗 *Acompanhe seu pedido:*\n`;
-  msg += `${BASE_URL}acompanhamento.html?pedido=${encodeURIComponent(numOrc)}\n\n`;
   msg += `---------------------------------------------\n`;
   msg += `⚠️ *Vetorização de logos e patrocinadores não está inclusa neste orçamento e será cobrada à parte diretamente com o designer gráfico.*\n`;
   msg += `⚠️ *Logos de patrocinadores devem ser enviados em alta definição (mín. 300dpi ou vetor).*\n\n`;
