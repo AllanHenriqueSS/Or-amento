@@ -139,7 +139,7 @@ const ETAPAS = [
 const ICONES = ["💳","📋","✏️","🖨️","🌀","⚡","👁️","✂️","📦","🔄","✅","💬","📬"];
 
 function normalizar(txt){
-  return (txt || "").trim().toLowerCase();
+  return (txt || "").trim().toLowerCase().replace(/#/g, "");
 }
 
 function renderSteps(statusAtual){
