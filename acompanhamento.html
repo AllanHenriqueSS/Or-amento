@@ -101,7 +101,7 @@
     </div>
 
     <h3 class="text-sm font-bold text-gray-300 mb-3">Acompanhamento</h3>
-    <div id="stepsContainer" class="grid grid-cols-3 gap-2 mb-2"></div>
+    <div id="stepsContainer" class="grid grid-cols-3 gap-1.5 mb-2"></div>
 
     <div id="previsaoBox" class="hidden mt-4 pt-4 border-t" style="border-color:var(--gold-border)">
       <p class="text-xs text-gray-300">Previsão de entrega</p>
@@ -176,13 +176,13 @@ function renderSteps(statusAtual){
     const isCurrent = i === idxAtual;
 
     const card = document.createElement('div');
-    card.className = "etapa-card rounded-lg p-2 flex flex-col gap-1" + (isDone ? " done" : "") + (isCurrent ? " current" : "");
+    card.className = "etapa-card rounded-lg p-1.5 flex flex-col gap-1 min-w-0" + (isDone ? " done" : "") + (isCurrent ? " current" : "");
 
     const topRow = document.createElement('div');
-    topRow.className = "flex items-center gap-1.5";
+    topRow.className = "flex items-center gap-1";
 
     const icon = document.createElement('div');
-    icon.className = "etapa-icon w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" + ((isDone || isCurrent) ? " done" : "");
+    icon.className = "etapa-icon w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" + ((isDone || isCurrent) ? " done" : "");
     icon.innerHTML = svgIcon(ICONES[i] || "");
 
     const num = document.createElement('p');
@@ -193,8 +193,9 @@ function renderSteps(statusAtual){
     topRow.appendChild(num);
 
     const nome = document.createElement('p');
-    nome.className = "etapa-label-name text-[11px] font-semibold leading-tight" + ((isDone || isCurrent) ? " active" : "");
+    nome.className = "etapa-label-name text-[10px] font-semibold leading-tight truncate" + ((isDone || isCurrent) ? " active" : "");
     nome.textContent = etapa;
+    nome.title = etapa;
 
     card.appendChild(topRow);
     card.appendChild(nome);
